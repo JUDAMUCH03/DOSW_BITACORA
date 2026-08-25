@@ -32,6 +32,7 @@ public class TallerEjercicio01 {
 ```
 
 Captura:
+
 <img width="260" height="33" alt="image" src="https://github.com/user-attachments/assets/eac23f06-1eae-4894-8ff4-a24d12fb02da" />
 
 
@@ -69,6 +70,7 @@ public class TallerEjercicio02 {
 ```
 
 Captura:
+
 <img width="470" height="37" alt="image" src="https://github.com/user-attachments/assets/b2a0e910-591b-42ef-b765-1b9f6fc83653" />
 
 
@@ -132,6 +134,7 @@ public class TallerEjercicio03 {
 ```
 
 Captura:
+
 <img width="289" height="25" alt="image" src="https://github.com/user-attachments/assets/2bc174d4-7bb4-4b02-9efa-17eea39e3bf3" />
 
 
@@ -194,6 +197,7 @@ public class TallerEjercicio04 {
 ```
 
 Captura:
+
 <img width="346" height="21" alt="image" src="https://github.com/user-attachments/assets/b82ae662-7f0b-452a-b0b5-cfab3e20c2c7" />
 
 
@@ -254,12 +258,10 @@ public class TallerEjercicio05 {
                 new Transaction("TX-104", 500.00, true)
         );
 
-        System.out.println("=== Procesando lote de transacciones ===");
-
         boolean existeNoAprobada = transacciones.stream().peek(tx -> System.out.println("Procesando: " + tx)).anyMatch(tx -> !tx.isApproved());
+
         boolean loteValido = !existeNoAprobada;
 
-        System.out.println("========================================");
         System.out.println("¿Existe al menos una transacción no aprobada?: " + existeNoAprobada);
         System.out.println("¿El lote de transacciones es válido?: " + loteValido);
     }
@@ -267,10 +269,11 @@ public class TallerEjercicio05 {
 ```
 
 Captura:
+
 <img width="481" height="84" alt="image" src="https://github.com/user-attachments/assets/30f0dd09-0ddf-4356-b202-cab411e91ac4" />
 
 
 Explicación:
-`peek()` actúa como una operación intermedia de observación que ejecuta una acción de logging (`System.out.println`) sobre cada elemento sin mutar el flujo ni consumir el stream. La operación terminal `anyMatch()` implementa evaluación en cortocircuito (*short-circuiting*): en el instante en que detecta la primera transacción con `!tx.isApproved()`, interrumpe el procesamiento restante optimizando el rendimiento computacional.
+`peek()` actúa como una operación intermedia de observación que ejecuta una acción de logging (`System.out.println`) sobre cada elemento sin mutar el flujo ni consumir el stream. La operación terminal `anyMatch()` implementa evaluación en cortocircuito: en el instante en que detecta la primera transacción con `!tx.isApproved()`, interrumpe el procesamiento restante optimizando el rendimiento computacional.
 
 
