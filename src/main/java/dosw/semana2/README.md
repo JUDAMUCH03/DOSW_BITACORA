@@ -1052,3 +1052,90 @@ Captura:
 
 Explicación:
 Se procesan métricas analíticas sobre el catálogo completo: agrupaciones y frecuencias con `Collectors.groupingBy()` y `Collectors.counting()`, conteo con `filter().count()`, cálculo de media aritmética con `mapToInt().average()` y obtención del valor máximo con `max(Comparator)`.
+
+---
+
+## Retos Especiales
+- Reto Legendario — Method References
+Se uso Method References en ejercicios como:
+1. Ejercicio 1 - Pokémon Tipo Fuego
+2. Ejercicio 2 - Pokédex Gritona
+3. Ejercicio 3 - Poder Total del Equipo
+4. Ejercicio 10 - Pokédex Compacta
+5. Reto Mewtwo
+
+---
+- Reto Shiny — Buenas prácticas de commits: Comprobable en github
+
+---
+
+- Reto Mewtwo — Ejercicio propuesto:
+### Torneo Supremo
+**Enunciado:**
+Ejercicio para clasificar a los Pokémon en un Torneo Supremo, integrando en la solución las 5 operaciones fundamentales: `filter()`, `map()`, `sorted()`, `groupingBy()` y `reduce()`.
+- **Reglas de negocio:**
+  1. Filtrar los Pokémon aptos con `nivel >= 25` (`filter`).
+  2. Ordenar a los clasificados por `poderCombate` de mayor a menor (`sorted`).
+  3. Agrupar a los participantes según su `region` de origen (`groupingBy`).
+  4. Extraer el poder de combate numérico (`map`).
+  5. Acumular el poder de combate total del torneo (`reduce`).
+
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+public class RetoMewtwo {
+
+    public static void main(String[] args) {
+        List<Pokemon> pokedex = List.of(
+                new Pokemon(1L, "Pikachu", "Eléctrico", 25, 320.0, "Kanto", false),
+                new Pokemon(2L, "Mewtwo", "Psíquico", 70, 680.0, "Kanto", true),
+                new Pokemon(3L, "Dragonite", "Dragón", 55, 530.0, "Kanto", false),
+                new Pokemon(4L, "Caterpie", "Bicho", 10, 95.0, "Kanto", false),
+                new Pokemon(5L, "Tyranitar", "Roca", 60, 600.0, "Johto", false),
+                new Pokemon(6L, "Totodile", "Agua", 15, 180.0, "Johto", false),
+                new Pokemon(7L, "Rayquaza", "Dragón", 75, 710.0, "Hoenn", true),
+                new Pokemon(8L, "Torchic", "Fuego", 12, 160.0, "Hoenn", false),
+                new Pokemon(9L, "Lucario", "Lucha", 50, 520.0, "Sinnoh", false)
+        );
+
+        //filter(), sorted() y groupingBy()
+        Map<String, List<String>> clasificadosPorRegion = pokedex.stream()
+                .filter(p -> p.getNivel() >= 25)
+                .sorted(Comparator.comparingDouble(Pokemon::getPoderCombate).reversed())
+                .collect(Collectors.groupingBy(
+                        Pokemon::getRegion,
+                        Collectors.mapping(Pokemon::getNombre, Collectors.toList())
+                ));
+
+        //map() y reduce()
+        double poderTotalTorneo = pokedex.stream()
+                .filter(p -> p.getNivel() >= 25)
+                .map(Pokemon::getPoderCombate)
+                .reduce(0.0, Double::sum);
+
+        System.out.println("CLASIFICADOS AL TORNEO SUPREMO (POR REGIÓN)");
+        clasificadosPorRegion.forEach((region, pokemones) -> 
+                System.out.println(region + ":\t" + pokemones));
+        System.out.println("Poder total acumulado de clasificados: " + (int) poderTotalTorneo);
+    }
+}
+```
+
+Captura:
+
+<img width="324" height="105" alt="Captura de pantalla 2026-08-31 151202" src="https://github.com/user-attachments/assets/afb976dd-9e8d-41ad-b7d9-ad57bc6d5849" />
+
+
+Explicación:
+- `filter(p -> p.getNivel() >= 25)`: Elimina del flujo los Pokémon en etapa inicial que no cumplen el umbral competitivo.
+- `sorted(Comparator.comparingDouble(...).reversed())`: Ordena el flujo de mayor a menor potencia.
+- `groupingBy(Pokemon::getRegion, ...)`: Clasifica el flujo en un mapa indexado por región geográfica, utilizando Method References.
+- `map(Pokemon::getPoderCombate)`: Realiza una proyección desacoplada extrayendo únicamente el valor escalar de combate.
+- `reduce(0.0, Double::sum)`: Operación terminal asociativa que acumula y totaliza el poder global con el elemento neutro `0.0`.
+
