@@ -1056,7 +1056,8 @@ Se procesan métricas analíticas sobre el catálogo completo: agrupaciones y fr
 ---
 
 ## Retos Especiales
-- Reto Legendario — Method References
+#Reto Legendario — Method References
+
 Se uso Method References en ejercicios como:
 1. Ejercicio 1 - Pokémon Tipo Fuego
 2. Ejercicio 2 - Pokédex Gritona
@@ -1065,15 +1066,13 @@ Se uso Method References en ejercicios como:
 5. Reto Mewtwo
 
 ---
-- Reto Shiny — Buenas prácticas de commits: Comprobable en github
+# Reto Shiny — Buenas prácticas de commits: Comprobable en github
 
 ---
-
-- Reto Mewtwo — Ejercicio propuesto:
-### Torneo Supremo
+# Reto Mewtwo — Ejercicio propuesto:
+## Torneo Supremo
 **Enunciado:**
 Ejercicio para clasificar a los Pokémon en un Torneo Supremo, integrando en la solución las 5 operaciones fundamentales: `filter()`, `map()`, `sorted()`, `groupingBy()` y `reduce()`.
-- **Reglas de negocio:**
   1. Filtrar los Pokémon aptos con `nivel >= 25` (`filter`).
   2. Ordenar a los clasificados por `poderCombate` de mayor a menor (`sorted`).
   3. Agrupar a los participantes según su `region` de origen (`groupingBy`).
