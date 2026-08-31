@@ -2,7 +2,6 @@ package dosw.semana2.pokemon;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Ejercicio18 {
     public static void main(String[] args) {
@@ -20,8 +19,10 @@ public class Ejercicio18 {
                 .limit(5)
                 .toList();
 
-        AtomicInteger ranking = new AtomicInteger(1);
-        top5.forEach(p -> System.out.printf("#%d %-10s – PC: %d\n",
-                ranking.getAndIncrement(), p.getNombre(), (int) p.getPoderCombate()));
+        int puesto = 1;
+        for (Pokemon p : top5) {
+            System.out.println("#" + puesto + " " + p.getNombre() + " - PC: " + (int) p.getPoderCombate());
+            puesto++;
+        }
     }
 }
