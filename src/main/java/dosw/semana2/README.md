@@ -75,5 +75,32 @@ Captura:
 Explicación:
 La operación  filter() evalúa un predicado para conservar exclusivamente las instancias cuyo atributo tipo coincide con "Fuego". Posteriormente, map(Pokemon::getNombre) proyecta el flujo de objetos al tipo String utilizando un Method Reference (::) y recolecta el resultado final en una lista inmutable mediante .toList().
 
-### Ejercicio 02 — Nombre del Ejercicio
-...
+### Ejercicio 02 — Pokédex Gritona
+**Enunciado:**
+Dada una lista con nombres de Pokémon, transformar todos los elementos a letras mayúsculas utilizando la operación intermedia `map()`.
+- **Datos de entrada:** `["Pikachu", "Charmander", "Squirtle", "Bulbasaur"]`
+- **Salida esperada:** `[PIKACHU, CHARMANDER, SQUIRTLE, BULBASAUR]`
+
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
+
+import java.util.List;
+
+public class Ejercicio2 {
+
+    public static void main(String[] args) {
+        List<String> pokemons = List.of("Pikachu", "Charmander", "Squirtle", "Bulbasaur");
+        List<String> pokemonsMayus = pokemons.stream()
+                .map(String::toUpperCase)
+                .toList();
+        System.out.println(pokemonsMayus);
+    }
+}
+```
+
+Captura:
+
+
+Explicación:
+La operación intermedia map() realiza una transformación 1:1 sobre cada elemento del flujo aplicando String::toUpperCase a través de un Method Reference (::) sin mutar la lista original. Finalmente, el operador terminal .toList() recolecta el flujo transformado en una nueva colección inmutable.
