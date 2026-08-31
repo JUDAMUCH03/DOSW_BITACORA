@@ -690,3 +690,169 @@ Captura:
 Explicación:
 `Collectors.groupingBy()` agrupa las instancias tomando `Pokemon::getRegion` como criterio de clasificación. A través de `Collectors.mapping()`, extrae el nombre de cada Pokémon para generar las listas asociadas a cada región
 
+
+### Ejercicio 15 — Maestro de Gimnasios
+**Enunciado:**
+Dado un listado de entrenadores con sus medallas, encontrar el entrenador con más medallas utilizando `max(Comparator)`.
+- **Datos de entrada:** `Ash(8 medallas), Misty(5 medallas), Brock(6 medallas), Gary(10 medallas)`
+- **Salida esperada:**
+  ```text
+  Campeón de gimnasios: Gary
+  Medallas obtenidas: 10
+  ```
+
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
+
+import java.util.Comparator;
+import java.util.List;
+
+public class Ejercicio15 {
+    public static void main(String[] args) {
+        List<Entrenador> entrenadores = List.of(
+                new Entrenador(1L, "Ash", 8, List.of()),
+                new Entrenador(2L, "Misty", 5, List.of()),
+                new Entrenador(3L, "Brock", 6, List.of()),
+                new Entrenador(4L, "Gary", 10, List.of())
+        );
+
+        Entrenador campeon = entrenadores.stream()
+                .max(Comparator.comparingInt(Entrenador::getMedallas))
+                .get();
+
+        System.out.println("Campeón de gimnasios: " + campeon.getNombre());
+        System.out.println("Medallas obtenidas: " + campeon.getMedallas());
+    }
+}
+```
+
+Captura:
+
+<img width="208" height="40" alt="Captura de pantalla 2026-08-31 144821" src="https://github.com/user-attachments/assets/4fcf884f-559b-4ed7-befd-2df518f0237f" />
+
+
+Explicación:
+La operación terminal `max()` toma un comparador numérico generado mediante `Comparator.comparingInt(Entrenador::getMedallas)` para evaluar cuál entidad posee el mayor número de medallas. Con `.get()` se extrae directamente el objeto `Entrenador` correspondiente al máximo.
+
+---
+
+### Ejercicio 16 — Entrenadores Experimentados
+**Enunciado:**
+Mostrar únicamente los entrenadores que posean más de 5 medallas utilizando `filter()`.
+- **Datos de entrada:** `Ash(8), Misty(5), Brock(6), Gary(10), May(3), Dawn(7)`
+- **Salida esperada:**
+  ```text
+  Entrenadores con > 5 medallas:
+  [Ash(8), Brock(6), Gary(10), Dawn(7)]
+  ```
+
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
+
+import java.util.List;
+
+public class Ejercicio16 {
+    public static void main(String[] args) {
+        List<Entrenador> entrenadores = List.of(
+                new Entrenador(1L, "Ash", 8, List.of()),
+                new Entrenador(2L, "Misty", 5, List.of()),
+                new Entrenador(3L, "Brock", 6, List.of()),
+                new Entrenador(4L, "Gary", 10, List.of()),
+                new Entrenador(5L, "May", 3, List.of()),
+                new Entrenador(6L, "Dawn", 7, List.of())
+        );
+
+        List<String> experimentados = entrenadores.stream()
+                .filter(e -> e.getMedallas() > 5)
+                .map(e -> e.getNombre() + "(" + e.getMedallas() + ")")
+                .toList();
+
+        System.out.println("Entrenadores con > 5 medallas:");
+        System.out.println(experimentados);
+    }
+}
+```
+
+Captura:
+
+<img width="279" height="48" alt="Captura de pantalla 2026-08-31 144825" src="https://github.com/user-attachments/assets/cca611cb-8ebe-4963-84df-f7155b76a159" />
+
+
+Explicación:
+La operación intermedia `filter()` evalúa el predicado `e.getMedallas() > 5` descartando a los entrenadores con 5 o menos medallas. Luego, `map()` formatea la representación textual requerida y `.toList()` recolecta los elementos en una lista inmutable.
+
+---
+
+### Ejercicio 17 — Equipo Más Poderoso
+**Enunciado:**
+Calcular cuál entrenador tiene la suma total de poderCombate más alta entre todos sus Pokémon utilizando `mapToDouble() + sum()`.
+- **Datos de entrada:**
+  ```text
+  Ash:   equipo con PC total 1850
+  Gary:  equipo con PC total 2340
+  Brock: equipo con PC total 1670
+  ```
+- **Salida esperada:**
+  ```text
+  Entrenador más poderoso: Gary
+  Poder acumulado del equipo: 2340
+  ```
+
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
+
+import java.util.Comparator;
+import java.util.List;
+
+public class Ejercicio17 {
+    public static void main(String[] args) {
+        List<Pokemon> equipoAsh = List.of(
+                new Pokemon(1L, "Pikachu", "Eléctrico", 50, 650.0, "Kanto", false),
+                new Pokemon(2L, "Charizard", "Fuego", 55, 700.0, "Kanto", false),
+                new Pokemon(3L, "Sceptile", "Planta", 45, 500.0, "Hoenn", false)
+        );
+
+        List<Pokemon> equipoGary = List.of(
+                new Pokemon(4L, "Blastoise", "Agua", 60, 800.0, "Kanto", false),
+                new Pokemon(5L, "Arcanine", "Fuego", 58, 780.0, "Kanto", false),
+                new Pokemon(6L, "Umbreon", "Siniestro", 56, 760.0, "Johto", false)
+        );
+
+        List<Pokemon> equipoBrock = List.of(
+                new Pokemon(7L, "Onix", "Roca", 40, 550.0, "Kanto", false),
+                new Pokemon(8L, "Geodude", "Roca", 38, 520.0, "Kanto", false),
+                new Pokemon(9L, "Steelix", "Acero", 48, 600.0, "Johto", false)
+        );
+
+        List<Entrenador> entrenadores = List.of(
+                new Entrenador(1L, "Ash", 8, equipoAsh),
+                new Entrenador(2L, "Gary", 10, equipoGary),
+                new Entrenador(3L, "Brock", 6, equipoBrock)
+        );
+
+        Entrenador masPoderoso = entrenadores.stream()
+                .max(Comparator.comparingDouble(e -> e.getEquipo().stream()
+                        .mapToDouble(Pokemon::getPoderCombate)
+                        .sum()))
+                .get();
+
+        double poderTotal = masPoderoso.getEquipo().stream()
+                .mapToDouble(Pokemon::getPoderCombate)
+                .sum();
+
+        System.out.println("Entrenador más poderoso: " + masPoderoso.getNombre());
+        System.out.println("Poder acumulado del equipo: " + (int) poderTotal);
+    }
+}
+```
+
+Captura:
+
+<img width="240" height="42" alt="Captura de pantalla 2026-08-31 144829" src="https://github.com/user-attachments/assets/51b46827-b3a3-4957-b8b5-85faf9db4ae6" />
+
+
+Explicación:
+Se procesa el equipo de cada entrenador mediante un sub-stream con `mapToDouble(Pokemon::getPoderCombate).sum()`, acumulando la suma de poder de combate. Luego, `max()` evalúa la comparación entre entrenadores para obtener el líder con mayor potencia total.
