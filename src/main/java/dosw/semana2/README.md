@@ -3,18 +3,77 @@
 ## Datos de Entrenador:
 - **Nombre y Apellido:** Juan Munar
 - **Código de Estudiante:** 1000103253 
-- **Curso:** DOSW (Desarrollo y Operaciones de Software)
+- **Curso:** DOSW
 
 ---
 
+### Ejercicio 01 — Pokémon Tipo Fuego
+**Enunciado:**
+Dada una lista de Pokémon con nombre y tipo, obtener únicamente aquellos cuyo tipo sea Fuego.
+- **Datos de entrada:** `Pikachu(Eléctrico), Charmander(Fuego), Squirtle(Agua), Vulpix(Fuego), Bulbasaur(Planta), Flareon(Fuego)`
+- **Salida esperada:** `[Charmander, Vulpix, Flareon]`
 
-### Ejercicio 01 — Nombre del Ejercicio
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
 
-Enunciado del Ejercicio
+import java.util.List;
 
-**Código implementado:** (pegar el código aquí)
-**Captura de ejecución:** (imagen)
-**Explicación:** (breve descripción de la solución)
+public class Ejercicio1 {
+
+    public static class Pokemon {
+        private String nombre;
+        private String tipo;
+
+        public Pokemon(String nombre, String tipo) {
+            this.nombre = nombre;
+            this.tipo = tipo;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public String getTipo() {
+            return tipo;
+        }
+
+        public void setNombre(String nombre) {
+            this.nombre = nombre;
+        }
+
+        public void setTipo(String tipo) {
+            this.tipo = tipo;
+        }
+
+        @Override
+        public String toString() {
+            return nombre + " (" + tipo + ")";
+        }
+    }
+
+    public static void main(String[] args) {
+        List<Pokemon> pokedex = List.of(
+                new Pokemon("Pikachu", "Eléctrico"),
+                new Pokemon("Charmander", "Fuego"),
+                new Pokemon("Squirtle", "Agua"),
+                new Pokemon("Vulpix", "Fuego"),
+                new Pokemon("Bulbasaur", "Planta"),
+                new Pokemon("Flareon", "Fuego")
+        );
+
+        List<String> pokemonesFuego = pokedex.stream().filter(p -> p.getTipo().equalsIgnoreCase("Fuego")).map(Pokemon::getNombre).toList();
+        System.out.println(pokemonesFuego);
+    }
+}
+```
+
+Captura:
+<img width="232" height="26" alt="image" src="https://github.com/user-attachments/assets/0d4bcdf6-e251-4170-b158-987ddab8aa19" />
+
+
+Explicación:
+La operación  filter() evalúa un predicado para conservar exclusivamente las instancias cuyo atributo tipo coincide con "Fuego". Posteriormente, map(Pokemon::getNombre) proyecta el flujo de objetos al tipo String utilizando un Method Reference (::) y recolecta el resultado final en una lista inmutable mediante .toList().
 
 ### Ejercicio 02 — Nombre del Ejercicio
 ...
