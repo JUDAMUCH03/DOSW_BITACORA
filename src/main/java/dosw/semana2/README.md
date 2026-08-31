@@ -416,3 +416,277 @@ Captura:
 Explicación:
 Se utiliza `filter(Pokemon::isPuedeEvolucionar)` empleando un Method Reference como predicado funcional para retener únicamente los especímenes con bandera activa. Luego, `map(Pokemon::getNombre)` desacopla el modelo transformando el stream a cadenas con los nombres correspondientes y `.toList()` construye la colección inmutable resultante.
 
+
+### Ejercicio 09 — Equipo Élite
+**Enunciado:**
+Mostrar únicamente los Pokémon cuyo poderCombate sea superior a 500 utilizando `filter()`.
+- **Datos de entrada:** `Pikachu(PC:320), Mewtwo(PC:680), Dragonite(PC:530), Squirtle(PC:210), Gengar(PC:495), Charizard(PC:610)`
+- **Salida esperada:**
+  ```text
+  Equipo Élite (PC > 500):
+  [Mewtwo(680), Charizard(610), Dragonite(530)]
+  ```
+
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
+
+import java.util.List;
+
+public class Ejercicio9 {
+    public static void main(String[] args) {
+        List<Pokemon> equipo = List.of(
+                new Pokemon(1L, "Pikachu", "Eléctrico", 25, 320.0, "Kanto", false),
+                new Pokemon(2L, "Mewtwo", "Psíquico", 70, 680.0, "Kanto", true),
+                new Pokemon(3L, "Dragonite", "Dragón", 55, 530.0, "Kanto", false),
+                new Pokemon(4L, "Squirtle", "Agua", 15, 210.0, "Kanto", false),
+                new Pokemon(5L, "Gengar", "Fantasma", 45, 495.0, "Kanto", false),
+                new Pokemon(6L, "Charizard", "Fuego", 60, 610.0, "Kanto", false)
+        );
+
+        List<String> elite = equipo.stream()
+                .filter(p -> p.getPoderCombate() > 500)
+                .map(p -> p.getNombre() + "(" + (int) p.getPoderCombate() + ")")
+                .toList();
+
+        System.out.println("Equipo Élite (PC > 500):");
+        System.out.println(elite);
+    }
+}
+```
+
+Captura:
+
+<img width="330" height="41" alt="Captura de pantalla 2026-08-31 144018" src="https://github.com/user-attachments/assets/17bcb8ba-0802-4f42-b1f1-37b49f44cb14" />
+
+
+Explicación:
+La operación intermedia `filter()` evalúa el predicado numérico `p.getPoderCombate() > 500` descartando los elementos que no superan dicho umbral. Posteriormente, `map()` proyecta el formato requerido y `.toList()` recolecta el resultado en una nueva lista inmutable.
+
+---
+
+### Ejercicio 10 — Pokédex Compacta
+**Enunciado:**
+Generar una lista que contenga únicamente los nombres de todos los Pokémon del equipo utilizando `map() + collect()`.
+- **Datos de entrada:** `Lista de objetos Pokemon completos`
+- **Salida esperada:** `["Pikachu", "Mewtwo", "Dragonite", "Squirtle", "Gengar", "Charizard"]`
+
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
+
+import java.util.List;
+
+public class Ejercicio10 {
+    public static void main(String[] args) {
+        List<Pokemon> equipo = List.of(
+                new Pokemon(1L, "Pikachu", "Eléctrico", 25, 320.0, "Kanto", false),
+                new Pokemon(2L, "Mewtwo", "Psíquico", 70, 680.0, "Kanto", true),
+                new Pokemon(3L, "Dragonite", "Dragón", 55, 530.0, "Kanto", false),
+                new Pokemon(4L, "Squirtle", "Agua", 15, 210.0, "Kanto", false),
+                new Pokemon(5L, "Gengar", "Fantasma", 45, 495.0, "Kanto", false),
+                new Pokemon(6L, "Charizard", "Fuego", 60, 610.0, "Kanto", false)
+        );
+
+        List<String> nombres = equipo.stream()
+                .map(Pokemon::getNombre)
+                .toList();
+
+        System.out.println(nombres);
+    }
+}
+```
+
+Captura:
+
+<img width="412" height="22" alt="Captura de pantalla 2026-08-31 144519" src="https://github.com/user-attachments/assets/94508bb9-1e9b-4909-861b-aa6b25176d20" />
+
+
+Explicación:
+La operación intermedia `map(Pokemon::getNombre)` realiza una transformación 1:1 extrayendo únicamente el atributo `nombre` mediante Method Reference (`::`). Finalmente, la operación terminal `.toList()` consolida los nombres en una colección inmutable.
+
+---
+
+### Ejercicio 11 — Poder Promedio
+**Enunciado:**
+Calcular el promedio de poderCombate de todos los Pokémon del equipo utilizando `mapToDouble() + average()`.
+- **Datos de entrada:** `PC: [320, 680, 530, 210, 495, 610]`
+- **Salida esperada:** `Poder de combate promedio: 474.17`
+
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
+
+import java.util.List;
+
+public class Ejercicio11 {
+    public static void main(String[] args) {
+        List<Pokemon> equipo = List.of(
+                new Pokemon(1L, "Pikachu", "Eléctrico", 25, 320.0, "Kanto", false),
+                new Pokemon(2L, "Mewtwo", "Psíquico", 70, 680.0, "Kanto", true),
+                new Pokemon(3L, "Dragonite", "Dragón", 55, 530.0, "Kanto", false),
+                new Pokemon(4L, "Squirtle", "Agua", 15, 210.0, "Kanto", false),
+                new Pokemon(5L, "Gengar", "Fantasma", 45, 495.0, "Kanto", false),
+                new Pokemon(6L, "Charizard", "Fuego", 60, 610.0, "Kanto", false)
+        );
+
+        double promedio = equipo.stream()
+                .mapToDouble(Pokemon::getPoderCombate)
+                .average()
+                .orElse(0.0);
+
+        System.out.printf("Poder de combate promedio: %.2f\n", promedio);
+    }
+}
+```
+
+Captura:
+
+<img width="250" height="21" alt="Captura de pantalla 2026-08-31 144525" src="https://github.com/user-attachments/assets/99d10924-3510-4c63-8fd0-221b2a6003fc" />
+
+
+Explicación:
+`mapToDouble(Pokemon::getPoderCombate)` transforma el flujo a un `DoubleStream` primitivo evitando el sobrecosto de autoboxing. La operación terminal `average()` calcula la media aritmética de los valores numéricos retornando un `OptionalDouble`.
+
+---
+
+### Ejercicio 12 — Campeón Regional
+**Enunciado:**
+Obtener el Pokémon con mayor poderCombate de toda la lista utilizando `max(Comparator)`.
+- **Datos de entrada:** `Pikachu(320), Mewtwo(680), Dragonite(530), Charizard(610)`
+- **Salida esperada:** `Campeón: Mewtwo con PC: 680`
+
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
+
+import java.util.Comparator;
+import java.util.List;
+
+public class Ejercicio12 {
+    public static void main(String[] args) {
+        List<Pokemon> equipo = List.of(
+                new Pokemon(1L, "Pikachu", "Eléctrico", 25, 320.0, "Kanto", false),
+                new Pokemon(2L, "Mewtwo", "Psíquico", 70, 680.0, "Kanto", true),
+                new Pokemon(3L, "Dragonite", "Dragón", 55, 530.0, "Kanto", false),
+                new Pokemon(4L, "Charizard", "Fuego", 60, 610.0, "Kanto", false)
+        );
+
+        Pokemon campeon = equipo.stream()
+                .max(Comparator.comparingDouble(Pokemon::getPoderCombate))
+                .get();
+
+        System.out.println("Campeón: " + campeon.getNombre() + " con PC: " + (int) campeon.getPoderCombate());
+    }
+}
+```
+
+Captura:
+
+<img width="202" height="20" alt="Captura de pantalla 2026-08-31 144529" src="https://github.com/user-attachments/assets/19e978f5-8d78-4e31-9987-293ff3f96bdf" />
+
+
+Explicación:
+La operación terminal `max()` evalúa los elementos mediante `Comparator.comparingDouble(Pokemon::getPoderCombate)` para identificar el objeto con el valor numérico más alto y `.get()` extrae la instancia encontrada.
+
+---
+
+### Ejercicio 13 — Organizar por Tipo
+**Enunciado:**
+Agrupar todos los Pokémon por su tipo y mostrar el listado por grupo utilizando `groupingBy()`.
+- **Datos de entrada:** `Squirtle(Agua), Psyduck(Agua), Charmander(Fuego), Vulpix(Fuego), Bulbasaur(Planta)`
+- **Salida esperada:**
+  ```text
+  Agua:   [Squirtle, Psyduck]
+  Fuego:  [Charmander, Vulpix]
+  Planta: [Bulbasaur]
+  ```
+
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+public class Ejercicio13 {
+    public static void main(String[] args) {
+        List<Pokemon> equipo = List.of(
+                new Pokemon(1L, "Squirtle", "Agua", 15, 210.0, "Kanto", false),
+                new Pokemon(2L, "Psyduck", "Agua", 18, 240.0, "Kanto", false),
+                new Pokemon(3L, "Charmander", "Fuego", 16, 250.0, "Kanto", false),
+                new Pokemon(4L, "Vulpix", "Fuego", 20, 290.0, "Kanto", false),
+                new Pokemon(5L, "Bulbasaur", "Planta", 14, 200.0, "Kanto", false)
+        );
+
+        Map<String, List<String>> porTipo = equipo.stream()
+                .collect(Collectors.groupingBy(
+                        Pokemon::getTipo,
+                        Collectors.mapping(Pokemon::getNombre, Collectors.toList())
+                ));
+
+        porTipo.forEach((tipo, lista) -> System.out.println(tipo + ":\t" + lista));
+    }
+}
+```
+
+Captura:
+
+<img width="211" height="60" alt="Captura de pantalla 2026-08-31 144533" src="https://github.com/user-attachments/assets/e9565837-494a-4013-ab24-be7c1d9d29ff" />
+
+
+Explicación:
+La operación terminal `collect()` con `Collectors.groupingBy()` particiona el flujo usando el atributo `tipo` como clave. El colector subordinado `Collectors.mapping()` transforma los elementos agrupados para almacenar exclusivamente los nombres en las listas del mapa resultante.
+
+---
+
+### Ejercicio 14 — Organizar por Región
+**Enunciado:**
+Agrupar los Pokémon según su región de origen utilizando `groupingBy()`.
+- **Datos de entrada:** `Pikachu(Kanto), Chikorita(Johto), Torchic(Hoenn), Piplup(Sinnoh), Charmander(Kanto), Totodile(Johto)`
+- **Salida esperada:**
+  ```text
+  Kanto:  [Pikachu, Charmander]
+  Johto:  [Chikorita, Totodile]
+  Hoenn:  [Torchic]
+  Sinnoh: [Piplup]
+  ```
+
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+public class Ejercicio14 {
+    public static void main(String[] args) {
+        List<Pokemon> equipo = List.of(
+                new Pokemon(1L, "Pikachu", "Eléctrico", 25, 320.0, "Kanto", false),
+                new Pokemon(2L, "Chikorita", "Planta", 15, 210.0, "Johto", false),
+                new Pokemon(3L, "Torchic", "Fuego", 16, 230.0, "Hoenn", false),
+                new Pokemon(4L, "Piplup", "Agua", 14, 205.0, "Sinnoh", false),
+                new Pokemon(5L, "Charmander", "Fuego", 16, 250.0, "Kanto", false),
+                new Pokemon(6L, "Totodile", "Agua", 15, 220.0, "Johto", false)
+        );
+
+        Map<String, List<String>> porRegion = equipo.stream()
+                .collect(Collectors.groupingBy(
+                        Pokemon::getRegion,
+                        Collectors.mapping(Pokemon::getNombre, Collectors.toList())
+                ));
+
+        porRegion.forEach((region, lista) -> System.out.println(region + ":\t" + lista));
+    }
+}
+```
+
+Captura:
+
+<img width="220" height="75" alt="Captura de pantalla 2026-08-31 144546" src="https://github.com/user-attachments/assets/a5e6335b-b690-4106-b279-90ba2142bfb0" />
+
+Explicación:
+`Collectors.groupingBy()` agrupa las instancias tomando `Pokemon::getRegion` como criterio de clasificación. A través de `Collectors.mapping()`, extrae el nombre de cada Pokémon para generar las listas asociadas a cada región
+
