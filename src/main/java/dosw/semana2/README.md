@@ -75,6 +75,8 @@ Captura:
 Explicación:
 La operación  filter() evalúa un predicado para conservar exclusivamente las instancias cuyo atributo tipo coincide con "Fuego". Posteriormente, map(Pokemon::getNombre) proyecta el flujo de objetos al tipo String utilizando un Method Reference (::) y recolecta el resultado final en una lista inmutable mediante .toList().
 
+---
+
 ### Ejercicio 02 — Pokédex Gritona
 **Enunciado:**
 Dada una lista con nombres de Pokémon, transformar todos los elementos a letras mayúsculas utilizando la operación intermedia `map()`.
@@ -107,6 +109,7 @@ Captura:
 Explicación:
 La operación intermedia map() realiza una transformación 1:1 sobre cada elemento del flujo aplicando String::toUpperCase a través de un Method Reference (::) sin mutar la lista original. Finalmente, el operador terminal .toList() recolecta el flujo transformado en una nueva colección inmutable.
 
+---
 
 ### Ejercicio 03 — Poder Total del Equipo
 **Enunciado:**
@@ -273,6 +276,7 @@ Captura:
 Explicación:
 La operación intermedia filter() evalúa el predicado p.getNivel() > 80 aislando los registros que cumplen la regla de negocio. La operación terminal count() procesa la cardinalidad de los elementos resultantes retornando un valor long. De forma complementaria, se proyectan los nombres filtrados con map(Pokemon::getNombre) para desglosar la salida esperada.
 
+---
 
 ### Ejercicio 06 — Pokédex Sin Duplicados
 **Enunciado:**
@@ -416,6 +420,7 @@ Captura:
 Explicación:
 Se utiliza `filter(Pokemon::isPuedeEvolucionar)` empleando un Method Reference como predicado funcional para retener únicamente los especímenes con bandera activa. Luego, `map(Pokemon::getNombre)` desacopla el modelo transformando el stream a cadenas con los nombres correspondientes y `.toList()` construye la colección inmutable resultante.
 
+---
 
 ### Ejercicio 09 — Equipo Élite
 **Enunciado:**
@@ -690,6 +695,7 @@ Captura:
 Explicación:
 `Collectors.groupingBy()` agrupa las instancias tomando `Pokemon::getRegion` como criterio de clasificación. A través de `Collectors.mapping()`, extrae el nombre de cada Pokémon para generar las listas asociadas a cada región
 
+---
 
 ### Ejercicio 15 — Maestro de Gimnasios
 **Enunciado:**
@@ -853,6 +859,196 @@ Captura:
 
 <img width="240" height="42" alt="Captura de pantalla 2026-08-31 144829" src="https://github.com/user-attachments/assets/51b46827-b3a3-4957-b8b5-85faf9db4ae6" />
 
+---
 
 Explicación:
 Se procesa el equipo de cada entrenador mediante un sub-stream con `mapToDouble(Pokemon::getPoderCombate).sum()`, acumulando la suma de poder de combate. Luego, `max()` evalúa la comparación entre entrenadores para obtener el líder con mayor potencia total.
+
+
+### Ejercicio 18 — Top 5 Pokémon Más Fuertes
+**Enunciado:**
+Generar un ranking de los cinco Pokémon con mayor poderCombate de toda la Pokédex utilizando `sorted() + limit(5)`.
+- **Datos de entrada:** `Lista completa de Pokémon con PC`
+- **Salida esperada:**
+  ```text
+  #1 Mewtwo     – PC: 680
+  #2 Charizard  – PC: 610
+  #3 Dragonite  – PC: 530
+  #4 Gengar     – PC: 495
+  #5 Pikachu    – PC: 320
+  ```
+
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
+
+import java.util.Comparator;
+import java.util.List;
+
+public class Ejercicio18 {
+    public static void main(String[] args) {
+        List<Pokemon> pokedex = List.of(
+                new Pokemon(1L, "Pikachu", "Eléctrico", 25, 320.0, "Kanto", false),
+                new Pokemon(2L, "Mewtwo", "Psíquico", 70, 680.0, "Kanto", true),
+                new Pokemon(3L, "Dragonite", "Dragón", 55, 530.0, "Kanto", false),
+                new Pokemon(4L, "Squirtle", "Agua", 15, 210.0, "Kanto", false),
+                new Pokemon(5L, "Gengar", "Fantasma", 45, 495.0, "Kanto", false),
+                new Pokemon(6L, "Charizard", "Fuego", 60, 610.0, "Kanto", false)
+        );
+
+        List<Pokemon> top5 = pokedex.stream()
+                .sorted(Comparator.comparingDouble(Pokemon::getPoderCombate).reversed())
+                .limit(5)
+                .toList();
+
+        int puesto = 1;
+        for (Pokemon p : top5) {
+            System.out.println("#" + puesto + " " + p.getNombre() + " - PC: " + (int) p.getPoderCombate());
+            puesto++;
+        }
+    }
+}
+```
+
+Captura:
+
+<img width="166" height="86" alt="Captura de pantalla 2026-08-31 150042" src="https://github.com/user-attachments/assets/626d5037-876e-44ec-bb35-cf5ca405a80f" />
+
+
+Explicación:
+La operación intermedia `sorted()` ordena el stream de forma descendente aplicando `Comparator.comparingDouble(Pokemon::getPoderCombate).reversed()`. La operación intermedia `limit(5)` trunca el flujo quedándose únicamente con los primeros 5 elementos de mayor potencia antes de recolectarlos con `.toList()`.
+
+---
+
+### Ejercicio 19 — Top 3 Entrenadores
+**Enunciado:**
+Generar un ranking de los 3 mejores entrenadores considerando: 1° más medallas, 2° mayor poder acumulado, 3° orden alfabético como criterio de desempate.
+- **Datos de entrada:**
+  ```text
+  Gary(10 medallas, PC:2340)
+  Ash(8 medallas, PC:1850)
+  Dawn(7 medallas, PC:2100)
+  Brock(6 medallas, PC:1670)
+  ```
+- **Salida esperada:**
+  ```text
+  #1 Gary  – 10 medallas, PC: 2340
+  #2 Ash   – 8 medallas,  PC: 1850
+  #3 Dawn  – 7 medallas,  PC: 2100
+  ```
+
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
+
+import java.util.Comparator;
+import java.util.List;
+
+public class Ejercicio19 {
+    public static void main(String[] args) {
+        List<Entrenador> entrenadores = List.of(
+                new Entrenador(1L, "Gary", 10, List.of(new Pokemon(1L, "Blastoise", "Agua", 60, 2340.0, "Kanto", false))),
+                new Entrenador(2L, "Ash", 8, List.of(new Pokemon(2L, "Pikachu", "Eléctrico", 50, 1850.0, "Kanto", false))),
+                new Entrenador(3L, "Dawn", 7, List.of(new Pokemon(3L, "Piplup", "Agua", 55, 2100.0, "Sinnoh", false))),
+                new Entrenador(4L, "Brock", 6, List.of(new Pokemon(4L, "Onix", "Roca", 45, 1670.0, "Kanto", false)))
+        );
+
+        List<Entrenador> top3 = entrenadores.stream()
+                .sorted(Comparator
+                        .comparingInt(Entrenador::getMedallas).reversed()
+                        .thenComparing(Comparator.comparingDouble((Entrenador e) -> e.getEquipo().stream()
+                                .mapToDouble(Pokemon::getPoderCombate)
+                                .sum()).reversed())
+                        .thenComparing(Entrenador::getNombre))
+                .limit(3)
+                .toList();
+
+        int puesto = 1;
+        for (Entrenador e : top3) {
+            double pcTotal = e.getEquipo().stream().mapToDouble(Pokemon::getPoderCombate).sum();
+            System.out.println("#" + puesto + " " + e.getNombre() + " - " + e.getMedallas() + " medallas, PC: " + (int) pcTotal);
+            puesto++;
+        }
+    }
+}
+```
+
+Captura:
+
+<img width="243" height="57" alt="Captura de pantalla 2026-08-31 150047" src="https://github.com/user-attachments/assets/24f4d0ca-7e6d-499b-a0db-c4cb707a5aa6" />
+
+
+Explicación:
+Se encadenan múltiples criterios de ordenamiento con `thenComparing()`: primero por medallas descendentes, segundo por la suma del poder de combate de su equipo (mediante un sub-stream con `mapToDouble().sum()`) y tercero por nombre alfabético. Finalmente, `limit(3)` extrae el podio de los 3 mejores.
+
+---
+
+### Ejercicio 20 — Pokédex Analítica
+**Enunciado:**
+Construir una estructura analítica que muestre: cantidad de Pokémon por tipo, por región, cantidad de legendarios, promedio de nivel y el Pokémon más fuerte utilizando únicamente Streams.
+- **Datos de entrada:** `Lista completa de Pokémon con todos sus atributos`
+- **Salida esperada:**
+  ```text
+  Por tipo:     {Fuego=1, Eléctrico=1, Agua=1, Psíquico=2, Fantasma=1, Dragón=1}
+  Por región:   {Kanto=7}
+  Legendarios:  2
+  Promedio niv: 49.3
+  Más fuerte:   Mewtwo (PC: 680)
+  ```
+
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+public class Ejercicio20 {
+    public static void main(String[] args) {
+        List<Pokemon> pokedex = List.of(
+                new Pokemon(1L, "Pikachu", "Eléctrico", 25, 320.0, "Kanto", false),
+                new Pokemon(2L, "Mewtwo", "Psíquico", 70, 680.0, "Kanto", true),
+                new Pokemon(3L, "Dragonite", "Dragón", 55, 530.0, "Kanto", false),
+                new Pokemon(4L, "Squirtle", "Agua", 15, 210.0, "Kanto", false),
+                new Pokemon(5L, "Gengar", "Fantasma", 45, 495.0, "Kanto", false),
+                new Pokemon(6L, "Charizard", "Fuego", 60, 610.0, "Kanto", false),
+                new Pokemon(7L, "Mew", "Psíquico", 75, 650.0, "Kanto", true)
+        );
+
+        Map<String, Long> porTipo = pokedex.stream()
+                .collect(Collectors.groupingBy(Pokemon::getTipo, Collectors.counting()));
+
+        Map<String, Long> porRegion = pokedex.stream()
+                .collect(Collectors.groupingBy(Pokemon::getRegion, Collectors.counting()));
+
+        long legendarios = pokedex.stream()
+                .filter(Pokemon::isLegendario)
+                .count();
+
+        double promedioNivel = pokedex.stream()
+                .mapToInt(Pokemon::getNivel)
+                .average()
+                .orElse(0.0);
+
+        Pokemon masFuerte = pokedex.stream()
+                .max(Comparator.comparingDouble(Pokemon::getPoderCombate))
+                .get();
+
+        System.out.println("Por tipo:     " + porTipo);
+        System.out.println("Por región:   " + porRegion);
+        System.out.println("Legendarios:  " + legendarios);
+        System.out.printf("Promedio niv: %.1f\n", promedioNivel);
+        System.out.println("Más fuerte:   " + masFuerte.getNombre() + " (PC: " + (int) masFuerte.getPoderCombate() + ")");
+    }
+}
+```
+
+Captura:
+
+<img width="567" height="89" alt="Captura de pantalla 2026-08-31 150053" src="https://github.com/user-attachments/assets/2ceab9ce-5c46-4791-92b6-912d9a9b86bc" />
+
+
+Explicación:
+Se procesan métricas analíticas sobre el catálogo completo: agrupaciones y frecuencias con `Collectors.groupingBy()` y `Collectors.counting()`, conteo con `filter().count()`, cálculo de media aritmética con `mapToInt().average()` y obtención del valor máximo con `max(Comparator)`.
