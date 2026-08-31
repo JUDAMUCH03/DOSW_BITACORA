@@ -101,6 +101,8 @@ public class Ejercicio2 {
 
 Captura:
 
+<img width="328" height="23" alt="Captura de pantalla 2026-08-31 134834" src="https://github.com/user-attachments/assets/066304e7-b782-4cd9-8f6e-bdfcd3292181" />
+
 
 Explicación:
 La operación intermedia map() realiza una transformación 1:1 sobre cada elemento del flujo aplicando String::toUpperCase a través de un Method Reference (::) sin mutar la lista original. Finalmente, el operador terminal .toList() recolecta el flujo transformado en una nueva colección inmutable.
@@ -132,6 +134,8 @@ public class Ejercicio3 {
 ```
 
 Captura:
+
+<img width="210" height="21" alt="Captura de pantalla 2026-08-31 135544" src="https://github.com/user-attachments/assets/82926bd0-72d3-417b-aa70-288648b84d94" />
 
 
 Explicación:
@@ -192,6 +196,8 @@ public class Ejercicio4 {
 ```
 
 Captura:
+
+<img width="231" height="14" alt="Captura de pantalla 2026-08-31 135559" src="https://github.com/user-attachments/assets/296d0626-af06-478c-99ef-56495357fe53" />
 
 
 Explicación:
@@ -261,6 +267,152 @@ public class Ejercicio5 {
 
 Captura:
 
+<img width="195" height="40" alt="Captura de pantalla 2026-08-31 135616" src="https://github.com/user-attachments/assets/905b0cf5-4aca-44a9-8130-6e488baef717" />
+
 
 Explicación:
 La operación intermedia filter() evalúa el predicado p.getNivel() > 80 aislando los registros que cumplen la regla de negocio. La operación terminal count() procesa la cardinalidad de los elementos resultantes retornando un valor long. De forma complementaria, se proyectan los nombres filtrados con map(Pokemon::getNombre) para desglosar la salida esperada.
+
+
+### Ejercicio 06 — Pokédex Sin Duplicados
+**Enunciado:**
+Dada una lista de Pokémon con elementos repetidos, generar una nueva colección donde cada Pokémon aparezca una sola vez utilizando `distinct()`.
+- **Datos de entrada:** `Pikachu, Charmander, Pikachu, Squirtle, Charmander, Mewtwo`
+- **Salida esperada:** `[Pikachu, Charmander, Squirtle, Mewtwo]`
+
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
+
+import java.util.List;
+
+public class Ejercicio6 {
+
+    public static void main(String[] args) {
+        List<String> pokemons = List.of(
+                "Pikachu", "Charmander", "Pikachu",
+                "Squirtle", "Charmander", "Mewtwo"
+        );
+
+        List<String> sinDuplicados = pokemons.stream()
+                .distinct()
+                .toList();
+
+        System.out.println(sinDuplicados);
+    }
+}
+```
+
+Captura:
+
+<img width="295" height="25" alt="Captura de pantalla 2026-08-31 143936" src="https://github.com/user-attachments/assets/326c4ccd-f06c-4b2c-9992-b4ea1de480b7" />
+
+
+Explicación:
+La operación intermedia con estado (`stateful intermediate operation`) `distinct()` procesa el flujo eliminando elementos duplicados según su implementación de `equals()` y `hashCode()`. Mantiene el orden de inserción original del stream y recopila el resultado limpio en una lista inmutable con `.toList()`.
+
+---
+
+### Ejercicio 07 — Orden del Profesor Oak
+**Enunciado:**
+El Profesor Oak quiere su Pokédex organizada. Ordenar alfabéticamente los nombres de los Pokémon utilizando `sorted()`.
+- **Datos de entrada:** `Squirtle, Pikachu, Mewtwo, Bulbasaur, Charmander, Abra`
+- **Salida esperada:** `[Abra, Bulbasaur, Charmander, Mewtwo, Pikachu, Squirtle]`
+
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
+
+import java.util.List;
+
+public class Ejercicio7 {
+
+    public static void main(String[] args) {
+        List<String> pokedex = List.of(
+                "Squirtle", "Pikachu", "Mewtwo",
+                "Bulbasaur", "Charmander", "Abra"
+        );
+
+        List<String> ordenados = pokedex.stream()
+                .sorted()
+                .toList();
+
+        System.out.println(ordenados);
+    }
+}
+```
+
+Captura:
+
+<img width="412" height="28" alt="Captura de pantalla 2026-08-31 144001" src="https://github.com/user-attachments/assets/359119e9-f620-4a52-9a7b-f3416fad10e2" />
+
+
+Explicación:
+La operación intermedia `sorted()` evalúa los elementos bajo su orden natural (*Comparable* / orden lexicográfico de cadenas ASCII/Unicode). Al ser una operación con estado, amortigua los elementos del flujo hasta completar la secuencia y los emite ordenados de forma ascendente antes de ser consolidados con `.toList()`.
+
+---
+
+### Ejercicio 08 — Evoluciones Preparadas
+**Enunciado:**
+Dada una lista de Pokémon que incluye si pueden evolucionar (`boolean puedeEvolucionar`), obtener únicamente los que estén listos para evolucionar utilizando `filter()`.
+- **Datos de entrada:** `Pikachu(true), Raichu(false), Charmander(true), Charizard(false), Squirtle(true), Blastoise(false)`
+- **Salida esperada:** `Listos para evolucionar: [Pikachu, Charmander, Squirtle]`
+
+**Código implementado:**
+```java
+package dosw.semana2.pokemon;
+
+import java.util.List;
+
+public class Ejercicio8 {
+
+    public static class Pokemon {
+        private String nombre;
+        private boolean puedeEvolucionar;
+
+        public Pokemon(String nombre, boolean puedeEvolucionar) {
+            this.nombre = nombre;
+            this.puedeEvolucionar = puedeEvolucionar;
+        }
+
+        public String getNombre() { return nombre; }
+        public boolean isPuedeEvolucionar() { return puedeEvolucionar; }
+
+        public void setNombre(String nombre) { this.nombre = nombre; }
+        public void setPuedeEvolucionar(boolean puedeEvolucionar) { this.puedeEvolucionar = puedeEvolucionar; }
+
+        @Override
+        public String toString() {
+            return nombre + "(" + puedeEvolucionar + ")";
+        }
+    }
+
+    public static void main(String[] args) {
+        List<Pokemon> equipo = List.of(
+                new Pokemon("Pikachu", true),
+                new Pokemon("Raichu", false),
+                new Pokemon("Charmander", true),
+                new Pokemon("Charizard", false),
+                new Pokemon("Squirtle", true),
+                new Pokemon("Blastoise", false)
+        );
+
+        List<String> listosParaEvolucionar = equipo.stream()
+                .filter(Pokemon::isPuedeEvolucionar)
+                .map(Pokemon::getNombre)
+                .toList();
+
+        System.out.println("Listos para evolucionar:");
+        System.out.println(listosParaEvolucionar);
+    }
+}
+```
+
+Captura:
+
+<img width="231" height="40" alt="Captura de pantalla 2026-08-31 144010" src="https://github.com/user-attachments/assets/a5972cc8-a941-49cb-92fb-434658137a1b" />
+
+
+Explicación:
+Se utiliza `filter(Pokemon::isPuedeEvolucionar)` empleando un Method Reference como predicado funcional para retener únicamente los especímenes con bandera activa. Luego, `map(Pokemon::getNombre)` desacopla el modelo transformando el stream a cadenas con los nombres correspondientes y `.toList()` construye la colección inmutable resultante.
+
